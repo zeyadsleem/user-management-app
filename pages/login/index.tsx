@@ -43,11 +43,11 @@ const Login: NextPage = () => {
             <Stack spacing={4}>
               <FormControl id="email">
                 <FormLabel>Email address</FormLabel>
-                <Input type="email" />
+                <Input type="email" name='email' />
               </FormControl>
               <FormControl id="password">
                 <FormLabel>Password</FormLabel>
-                <Input type="password" />
+                <Input type="password" name='password' />
               </FormControl>
               <Stack spacing={10}>
                 <Stack
