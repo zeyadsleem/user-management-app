@@ -1,11 +1,3 @@
-/**
- * const [values, handelChange, resetFormFields] = useFormFiles<T>(initialValues)
- *
- * signIn form (Email: "", Password: "")
- * signUp form (FirstName: "", LastName: "", Email: "", Password: "")
- *
- * */
-
 import { ChangeEvent, HtmlHTMLAttributes, useState } from "react";
 
 export function useFormFiles<T>(
