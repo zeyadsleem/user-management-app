@@ -1,7 +1,7 @@
 //#region imports
-import { ApiError, Provider, Session, User } from "@supabase/supabase-js";
+import { ApiError, Provider, Session, User, AuthChangeEvent } from "@supabase/supabase-js";
 import { supabase } from '@/lib/supabase'
-import { createContext, FunctionComponent, useState } from "react";
+import { createContext, FunctionComponent, useEffect, useState } from "react";
 import { ReactNode } from "react";
 //#endregion
 
@@ -44,6 +44,29 @@ export const AuthContext = createContext<AuthContextProps | undefined>(undefined
 export const AuthProvider: FunctionComponent = ({ children }: Props) => {
   const [session, setSession] = useState<Session | null>(null)
   const [user, setUser] = useState<User | null>(null)
+
+  const setServerSession = async (event: AuthChangeEvent, session: Session | null) => {
+    await fetch('./api',
+      {
+        method: 'POST',
+        headers: new Headers({ 'Content-Type': 'application/json' }),
+        credentials: 'same-origin',
+        body: JSON.stringify({ event, session })
+      })
+  }
+
+  useEffect(() => {
+    const session = supabase.auth.session()
+    setSession(session);
+    setUser(session?.user ?? null)
+    const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
+      await setServerSession(event, session)
+      setSession(session)
+      setUser(session?.user ?? null)
+    })
+    return () => authListener?.unsubscribe
+  }, [])
+
 
   const values = {
     session,
